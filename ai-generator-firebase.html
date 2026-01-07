@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dumca Music AI Generator - Users</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+  body { background: #0b0b0b; color: white; font-family: Arial; text-align: center; padding: 40px; }
+  input, select, textarea { display: block; margin: 10px auto; padding: 10px; width: 300px; border-radius: 5px; border: none; background: #111; color: white; }
+  button { padding: 10px 20px; margin: 10px; background: #1db954; color: black; border: none; border-radius: 5px; cursor: pointer; }
+  .track-card { background: #222; margin: 10px auto; padding: 15px; width: 80%; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<h1>Dumca Music AI Generator</h1>
+
+<div id="auth-section">
+  <h2>Login / Register</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <button id="registerBtn">Register</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
+</div>
+
+<div id="generator-section" style="display:none;">
+  <textarea id="lyrics" placeholder="Type your lyrics here..."></textarea>
+  <select id="genre">
+    <option value="pop">Pop</option>
+    <option value="rock">Rock</option>
+    <option value="hiphop">Hip-Hop</option>
+    <option value="electronic">Electronic</option>
+  </select>
+  <select id="voice">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="robot">Robot</option>
+  </select>
+  <input type="number" id="price" placeholder="Price $">
+  <button id="generateBtn">Generate & Add to Store</button>
+</div>
+
+<h2>Your Tracks</h2>
+<div id="user-tracks"></div>
+
+<script>
+  // TODO: wklej swoją konfigurację Firebase
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "XXXX",
+    appId: "XXXX"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const authSection = document.getElementById('auth-section');
+  const generatorSection = document.getElementById('generator-section');
+  const userTracksDiv = document.getElementById('user-tracks');
+
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
+  const registerBtn = document.getElementById('registerBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const lyricsInput = document.getElementById('lyrics');
+  const genreInput = document.getElementById('genre');
+  const voiceInput = document.getElementById('voice');
+  const priceInput = document.getElementById('price');
+  const generateBtn = document.getElementById('generateBtn');
+
+  loginBtn.addEventListener('click', () => {
+    auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
+      .catch(e => alert(e.message));
+  });
+
+  registerBtn.addEventListener('click', () => {
+    auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
+      .catch(e => alert(e.message));
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(user => {
+    if(user){
+      authSection.style.display = 'none';
+      generatorSection.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+      loadUserTracks(user.uid);
+    } else {
+      authSection.style.display = 'block';
+      generatorSection.style.display = 'none';
+      logoutBtn.style.display = 'none';
+      userTracksDiv.innerHTML = '';
+    }
+  });
+
+  generateBtn.addEventListener('click', () => {
+    const lyrics = lyricsInput.value || "No lyrics";
+    const genre = genreInput.value;
+    const voice = voiceInput.value;
+    const price = priceInput.value || 0;
+    const user = auth.currentUser;
+
+    if(!user) return alert("Login first!");
+
+    for(let i=1; i<=2; i++){
+      const trackTitle = `${lyrics.substring(0,20)}... [${genre}, ${voice}, Version ${i}]`;
+
+      // zapis do Firestore
+      db.collection("tracks").add({
+        userId: user.uid,
+        title: trackTitle,
+        lyrics,
+        genre,
+        voice,
+        price,
+        audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      });
+
+      alert(`Added track "${trackTitle}" to your store for $${price}`);
+    }
+
+    loadUserTracks(user.uid);
+  });
+
+  function loadUserTracks(uid){
+    userTracksDiv.innerHTML = '';
+    db.collection("tracks").where("userId", "==", uid).get().then(snapshot=>{
+      snapshot.forEach(doc=>{
+        const t = doc.data();
+        const div = document.createElement('div');
+        div.className = 'track-card';
+        div.innerHTML = `
+          <p>${t.title} - $${t.price}</p>
+          <audio controls src="${t.audioUrl}"></audio>
+        `;
+        userTracksDiv.appendChild(div);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
