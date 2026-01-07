@@ -1,41 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dumca Music</title>
-  <style>
-    body {
-      background: #0b0b0b; /* czarne tło */
-      color: white; /* biały tekst */
-      font-family: Arial, sans-serif; /* czcionka */
-      text-align: center; /* wyśrodkowanie */
-      padding-top: 100px; /* odstęp od góry */
-    }
-    h1 {
-      font-size: 48px; /* duży nagłówek */
-    }
-    p {
-      color: #aaa; /* opis w szarym kolorze */
-      font-size: 18px;
-    }
-    a {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 14px 24px;
-      background: #1db954; /* zielony przycisk */
-      color: #000; /* czarny tekst */
-      text-decoration: none;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Dumca Music</title>
+<style>
+  body {
+    background: linear-gradient(120deg,#0b0b0b,#1a1a1a);
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  h1 {
+    color: #1db954;
+    font-size: 60px;
+    margin-bottom: 20px;
+  }
+  p.subtitle {
+    font-size: 20px;
+    margin-bottom: 50px;
+  }
+  .button {
+    display: inline-block;
+    background: #1db954;
+    color: black;
+    text-decoration: none;
+    padding: 18px 35px;
+    margin: 15px;
+    border-radius: 10px;
+    font-size: 22px;
+    transition: 0.2s;
+  }
+  .button:hover { opacity: 0.85; }
+  .card {
+    background: #222;
+    display: inline-block;
+    padding: 25px;
+    margin: 15px;
+    border-radius: 12px;
+    width: 280px;
+    vertical-align: top;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .card h3 {
+    color: #1db954;
+    margin-bottom: 15px;
+  }
+  .card p {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+</style>
 </head>
 <body>
 
-  <h1>Dumca Music</h1>
-  <p>Create music with AI. Download. Sell.</p>
+<h1>Dumca Music</h1>
+<p class="subtitle">Your AI Music Platform – choose a generator version:</p>
 
-  <a href="ai-generator.html">Go to AI Music Generator →</a>
+<div class="card">
+  <h3>Generator v1 (Simple)</h3>
+  <p>Basic AI music generator with 2 dummy versions. Quick test version.</p>
+  <a href="ai-generator.html" class="button">Go to v1</a>
+</div>
+
+<div class="card">
+  <h3>Generator v2 (Front-End)</h3>
+  <p>Improved design with 2 versions, audio players, and download buttons. Nice modern UI.</p>
+  <a href="ai-generator-v2.html" class="button">Go to v2</a>
+</div>
+
+<div class="card">
+  <h3>Generator v3 (Users / Store)</h3>
+  <p>Full platform: login/register, save tracks to your profile, set prices. Ready for payments.</p>
+  <a href="ai-generator-firebase.html" class="button">Go to v3</a>
+</div>
 
 </body>
 </html>
