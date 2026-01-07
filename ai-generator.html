@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Music Generator - Dumca Music</title>
+<style>
+  body {
+    background: #0b0b0b;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
+  }
+  h1 { font-size: 40px; margin-bottom: 30px; }
+  label, input, select, textarea, button {
+    display: block;
+    margin: 15px auto;
+    font-size: 16px;
+  }
+  textarea {
+    width: 80%;
+    height: 80px;
+    resize: none;
+    padding: 8px;
+    font-size: 16px;
+  }
+  button {
+    padding: 12px 24px;
+    background: #1db954;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover { opacity: 0.9; }
+  .track-container {
+    margin-top: 30px;
+  }
+  audio { display: block; margin: 10px auto; width: 300px; }
+</style>
+</head>
+<body>
+
+<h1>AI Music Generator</h1>
+
+<label for="lyrics">Lyrics / Song Text:</label>
+<textarea id="lyrics" placeholder="Type your lyrics here..."></textarea>
+
+<label for="genre">Music Genre:</label>
+<select id="genre">
+  <option value="pop">Pop</option>
+  <option value="rock">Rock</option>
+  <option value="hiphop">Hip-Hop</option>
+  <option value="electronic">Electronic</option>
+</select>
+
+<label for="voice">Voice / Style:</label>
+<select id="voice">
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+  <option value="robot">Robot</option>
+</select>
+
+<button id="generateBtn">Generate 2 Versions</button>
+
+<div class="track-container" id="tracks"></div>
+
+<script>
+const generateBtn = document.getElementById('generateBtn');
+const tracksDiv = document.getElementById('tracks');
+
+generateBtn.addEventListener('click', () => {
+  const lyrics = document.getElementById('lyrics').value || "No lyrics";
+  const genre = document.getElementById('genre').value;
+  const voice = document.getElementById('voice').value;
+
+  // Wyczyść poprzednie tracki
+  tracksDiv.innerHTML = '';
+
+  for(let i=1; i<=2; i++) {
+    const trackTitle = `${lyrics.substring(0,20)}... [${genre}, ${voice}, Version ${i}]`;
+    
+    // Tworzymy kontener dla każdego tracka
+    const trackContainer = document.createElement('div');
+
+    // Dodaj tytuł
+    const titleEl = document.createElement('p');
+    titleEl.textContent = trackTitle;
+    trackContainer.appendChild(titleEl);
+
+    // Dodaj audio
+    const audioEl = document.createElement('audio');
+    audioEl.controls = true;
+    audioEl.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; // dummy audio
+    trackContainer.appendChild(audioEl);
+
+    // Dodaj przycisk download
+    const downloadBtn = document.createElement('a');
+    downloadBtn.href = audioEl.src;
+    downloadBtn.download = `${trackTitle}.mp3`;
+    downloadBtn.textContent = "Download";
+    downloadBtn.style.display = "block";
+    downloadBtn.style.margin = "10px auto";
+    downloadBtn.style.padding = "8px 16px";
+    downloadBtn.style.background = "#1db954";
+    downloadBtn.style.color = "#000";
+    downloadBtn.style.textDecoration = "none";
+    downloadBtn.style.borderRadius = "5px";
+    trackContainer.appendChild(downloadBtn);
+
+    // Dodaj trackContainer do strony
+    tracksDiv.appendChild(trackContainer);
+  }
+
+  alert(`Generated 2 versions for your lyrics! [Genre: ${genre}, Voice: ${voice}]`);
+});
+</script>
+
+</body>
+</html>
